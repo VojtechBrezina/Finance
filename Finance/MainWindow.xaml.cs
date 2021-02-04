@@ -18,8 +18,23 @@ namespace Finance {
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow: Window {
+		private DockPanel contentPanel;
+
+		public readonly TitleScreen titleScreen;
+
 		public MainWindow() {
 			InitializeComponent();
+			contentPanel = (DockPanel)Content;
+
+			titleScreen = new TitleScreen(this);
+
+			SwitchScreens(titleScreen);
+		}
+
+		private void SwitchScreens(UIElement screenElement) {
+			if(contentPanel.Children.Count == 2)
+				contentPanel.Children.RemoveAt(1);
+			contentPanel.Children.Add(screenElement);
 		}
 
 		private void ExitCallBack(object sender, RoutedEventArgs e) {

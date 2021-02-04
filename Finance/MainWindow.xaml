@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Finance"
         mc:Ignorable="d"
-        Title="Finance" Height="450" Width="800" WindowStartupLocation="CenterScreen">
+        Title="Finance" Height="450" Width="800" WindowStartupLocation="CenterScreen" MinWidth="600" MinHeight="400">
 
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
@@ -16,6 +16,5 @@
                 <MenuItem Header="_O programu"/>
             </MenuItem>
         </Menu>
-        <local:TitleScreen/>
     </DockPanel>    
 </Window>

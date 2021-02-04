@@ -16,8 +16,11 @@ namespace Finance {
 	/// Interaction logic for TitleScreen.xaml
 	/// </summary>
 	public partial class TitleScreen: UserControl {
-		public TitleScreen() {
+		private MainWindow owner;
+
+		public TitleScreen(MainWindow owner) {
 			InitializeComponent();
+			this.owner = owner;
 		}
 	}
 }
