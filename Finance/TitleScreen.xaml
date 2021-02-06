@@ -21,29 +21,9 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Label 
-            Content="Úvod" 
-            Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" 
-            Style="{StaticResource HeadingLabel}"/>
-        
-        <Label 
-            Content="Akce" 
-            Grid.Row="1" Grid.ColumnSpan="4" />
-        
-        <UniformGrid 
-            Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" 
-            Columns="4">
-            
-            <Button Content="Ruční zadání dat..."/>
-            <Button Content="Import dat..."/>
-            <Button Content="Přehled dat..."/>
-        </UniformGrid>
-        
-        <Label 
-            Grid.Row="3" Grid.Column="0" 
-            Content="Rychlý přehled" Grid.ColumnSpan="4" />
-        
+        <Label Content="Úvod"  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Style="{StaticResource HeadingLabel}"/>
+        <Label Content="Akce" Grid.Row="1" Grid.ColumnSpan="4" />
+        <Label Grid.Row="3" Grid.Column="0" Content="Rychlý přehled" Grid.ColumnSpan="4" />
         <Canvas Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"/>
-
     </Grid>
 </UserControl>

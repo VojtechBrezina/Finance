@@ -10,7 +10,15 @@
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
             <MenuItem Header="_Soubor">
-                <MenuItem Header="_Ukončit" Click="ExitCallBack"/>
+                <MenuItem Header="Ú_vodní obrazovka"/>
+                <Separator/>
+                <MenuItem Header="_Ukončit" Click="ExitCallBack" />
+            </MenuItem>
+            <MenuItem Header="_Data">
+                <MenuItem Header="_Ruční zadání dat"/>
+                <MenuItem Header="_Import výpisu"/>
+                <Separator/>
+                <MenuItem Header="_Výstupy"/>
             </MenuItem>
             <MenuItem Header="_Nápověda">
                 <MenuItem Header="_O programu"/>
