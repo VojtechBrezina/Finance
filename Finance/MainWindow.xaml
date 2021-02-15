@@ -9,20 +9,25 @@
 
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem Header="_Soubor">
-                <MenuItem Header="Ú_vodní obrazovka"/>
-                <Separator/>
-                <MenuItem Header="_Ukončit" Click="ExitCallBack" />
-            </MenuItem>
-            <MenuItem Header="_Data">
-                <MenuItem Header="_Ruční zadání dat"/>
-                <MenuItem Header="_Import výpisu"/>
-                <Separator/>
-                <MenuItem Header="_Výstupy"/>
-            </MenuItem>
-            <MenuItem Header="_Nápověda">
-                <MenuItem Header="_O programu"/>
-            </MenuItem>
+            <MenuItem Header="_Zadání dat"/>
+            <MenuItem Header="_Přehled dat"/>
+            <MenuItem Header="Ú_vodní obrazovka"/>
+            <MenuItem Header="_Nastavení úvodní obrazovky"/>
+            <MenuItem Header="_O programu"/>
+            <MenuItem Header="_Ukončit"/>
         </Menu>
-    </DockPanel>    
+    </DockPanel>
+
+    <Window.InputBindings>
+        <KeyBinding Key="B"
+              Modifiers="Control" 
+              Command="ApplicationCommands.Open" />
+    </Window.InputBindings>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Open"
+                  Executed="OpenCmdExecuted"
+                  CanExecute="OpenCmdCanExecute"/>
+    </Window.CommandBindings>
+
 </Window>
