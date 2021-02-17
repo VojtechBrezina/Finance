@@ -14,20 +14,16 @@
             <MenuItem Header="Ú_vodní obrazovka"/>
             <MenuItem Header="_Nastavení úvodní obrazovky"/>
             <MenuItem Header="_O programu"/>
-            <MenuItem Header="_Ukončit"/>
+            <MenuItem Header="_Ukončit" Command="Close"/>
         </Menu>
     </DockPanel>
 
     <Window.InputBindings>
-        <KeyBinding Key="B"
-              Modifiers="Control" 
-              Command="ApplicationCommands.Open" />
+        <KeyBinding Key="F4" Modifiers="Alt" Command="Close"/>
     </Window.InputBindings>
 
     <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Open"
-                  Executed="OpenCmdExecuted"
-                  CanExecute="OpenCmdCanExecute"/>
+        <CommandBinding Command="Close" Executed="Close_CommandBinding_Executed" CanExecute="Close_CommandBinding_CanExecute"/>
     </Window.CommandBindings>
 
 </Window>

@@ -13,32 +13,27 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using Microsoft.Windows.Input;
+
 namespace Finance {
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Hlavní okno aplikace obsahující jednoduché menu a prostor
+	/// pro navigaci mezi jednotlivými obrazovkami
 	/// </summary>
 	public partial class MainWindow: Window {
-		private DockPanel contentPanel;
-
-		public readonly TitleScreen titleScreen;
 
 		public MainWindow() {
 			InitializeComponent();
-			contentPanel = (DockPanel)Content;
-
-			titleScreen = new TitleScreen(this);
-
-			SwitchScreens(titleScreen);
 		}
 
-		private void SwitchScreens(UIElement screenElement) {
-			if(contentPanel.Children.Count == 2)
-				contentPanel.Children.RemoveAt(1);
-			contentPanel.Children.Add(screenElement);
-		}
-
-		private void ExitCallBack(object sender, RoutedEventArgs e) {
+		#region příkaz Close
+		private void Close_CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e) {
 			Close();
 		}
+
+		private void Close_CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			e.CanExecute = true;
+		}
+		#endregion
 	}
 }
