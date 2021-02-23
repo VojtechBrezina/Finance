@@ -10,7 +10,7 @@ namespace Finance {
 	/// Třída popisující nastavení grafu. Instance může být sdílena několika
 	/// instancemi třídy <see cref="PlotDataSource"/>. Obvykle při vykreslování 
 	/// několika zdrojů do jednoho <see cref="PlotControl"/> prvku. Na druhou
-	/// stranu sdílení instance <see cref="PlotSettings"/> mezi několika
+	/// stranu sdílení instance <see cref="PlotDataAdapter"/> mezi několika
 	/// instancemi <see cref="PlotControl"/> vyvolá problémy kvůli systému 
 	/// maximálních a minimálních hodnot.
 	/// </para><para>
@@ -20,7 +20,7 @@ namespace Finance {
 	/// data metodou <see cref="CheckMinMax"/>.
 	/// </para>
 	/// </summary>
-	class PlotSettings {
+	class PlotDataAdapter {
 		/// <summary>
 		/// Počáteční datum grafu.
 		/// </summary>
@@ -47,7 +47,10 @@ namespace Finance {
 		/// </summary>
 		public decimal MaxValue { get; private set; } = 0;
 
-		public PlotSettings() {
+		public PlotDataAdapter(NodaTime.LocalDate startDate, NodaTime.LocalDate endDate, NodaTime.Period interval) {
+			this.startDate = startDate;
+			this.endDate = endDate;
+			this.interval = interval;
 		}
 
 		/// <summary>
