@@ -9,7 +9,7 @@
 
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem Header="_Zadání dat"/>
+            <MenuItem Header="_Zadání dat" Click="DataInputScreenSelected"/>
             <MenuItem Header="_Přehled dat"/>
             <MenuItem Header="Ú_vodní obrazovka"/>
             <MenuItem Header="_Nastavení úvodní obrazovky"/>

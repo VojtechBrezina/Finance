@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,11 +15,10 @@ using System.Windows.Shapes;
 
 namespace Finance.Screens {
 	/// <summary>
-	/// Interaction logic for TitleScreen.xaml
+	/// Interaction logic for DataInputScreen.xaml
 	/// </summary>
-	public partial class TitleScreen: UserControl {
-
-		public TitleScreen() {
+	public partial class DataInputScreen: UserControl {
+		public DataInputScreen() {
 			InitializeComponent();
 		}
 	}
