@@ -1,12 +1,369 @@
-﻿<UserControl x:Class="Finance.Screens.DataInputScreen"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Finance.Screens"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Finance"
+    xmlns:data="clr-namespace:Finance.Data"
+    xmlns:win32="clr-namespace:Microsoft.Win32;assembly=PresentationFramework"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:oxy="http://oxyplot.org/wpf"
+    x:Class="Finance.Screens.DataInputScreen"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <data:MyOxyColorConverter
+            x:Key="MyOxyColorConverter" />
+        <oxy:OxyColorConverter
+            x:Key="OxyColorConverter" />
+        <data:IdToCategoryConverter
+            x:Key="IdToCategoryConverter" />
+        <data:InverseBooleanConverter
+            x:Key="InverseBooleanConverter" />
+        <win32:OpenFileDialog
+            x:Key="OpenFileDialog"
+            FileOk="OpenFileDialog_FileOk" />
+    </UserControl.Resources>
     <Grid>
-            <Separator Grid.Row="1" BorderBrush="#FFFF1B1B" Background="#FF26F411" Foreground="#FF0003FA"/>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="1*" />
+        </Grid.RowDefinitions>
+        <TabControl
+            Margin="5,5,5,5">
+            <TabItem
+                Header="Import ze souboru">
+                <Grid
+                    HorizontalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="1*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition
+                            Width="1*" />
+                        <ColumnDefinition
+                            Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Content="Adresa: "
+                        Grid.Column="0"
+                        Grid.Row="0"
+                        Margin="2,2,2,2"
+                        Padding="2,2,2,2" />
+                    <StackPanel
+                        Grid.Column="1"
+                        Grid.Row="0"
+                        Orientation="Horizontal"
+                        Margin="0,0,33,26"
+                        Grid.ColumnSpan="4"
+                        Grid.RowSpan="2">
+                        <TextBox
+                            x:Name="filePathTextBox"
+                            MinWidth="200"
+                            Margin="2,2,2,2" />
+                        <Button
+                            x:Name="fileSelectionButton"
+                            Content="Procházet..."
+                            Click="fileSelectionButton_Click"
+                            Margin="2,2,2,2" />
+                    </StackPanel>
+                    <Label
+                        Content="Typ:"
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Margin="2,2,2,2"
+                        Padding="2,2,2,2" />
+                    <ComboBox
+                        x:Name="fileFormatComboBox"
+                        SelectionChanged="fileFormatComboBox_SelectionChanged"
+                        MinWidth="100"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Margin="2,2,0,2"
+                        HorizontalAlignment="Left"
+                        Grid.ColumnSpan="2">
+
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock
+                                    Text="{Binding DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <Button
+                        x:Name="fileInputConfirmButton"
+                        Content="Proveď..."
+                        Click="fileInputConfirmButton_Click"
+                        Margin="2,2,2,2"
+                        Grid.Column="0"
+                        Grid.Row="2" />
+                    <Button
+                        x:Name="fileInputNextBatchButton"
+                        Content="Další"
+                        Click="fileInputNextBatchButton_Click"
+                        IsEnabled="False"
+                        Margin="2,2,2,2"
+                        Grid.Column="4"
+                        Grid.Row="2" />
+                    <Separator
+                        Grid.Column="0"
+                        Grid.Row="3"
+                        Grid.ColumnSpan="5"
+                        Margin="2,2,2,2" />
+                    <ListView
+                        Grid.Column="0"
+                        Grid.Row="4"
+                        Grid.ColumnSpan="5"
+                        x:Name="fileImportTransactionListView">
+                        <ListView.Resources>
+                            <Style
+                                TargetType="{x:Type ListViewItem}">
+                                <Setter
+                                    Property="HorizontalContentAlignment"
+                                    Value="Stretch" />
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Header="Datum">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding DisplayDate}"
+                                                TextAlignment="Right"
+                                                HorizontalAlignment="Stretch" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Částka">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock
+                                                Text="{Binding Amount}"
+                                                TextAlignment="Right"
+                                                HorizontalAlignment="Stretch" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Popis">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Text="{Binding Description, Mode=TwoWay}"
+                                                TextAlignment="Left"
+                                                HorizontalAlignment="Stretch" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Kategorie"
+                                    Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <local:CategoryPicker
+                                                SelectedCategory="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <TabItem
+                Header="Ruční zadání">
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Top">
+                    <DatePicker
+                        MinWidth="100"
+                        Margin="5,5,5,5"
+                        x:Name="transactionInputDatePicker" />
+                    <TextBlock
+                        Text="Částka:"
+                        Margin="5,5,5,5"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        MinWidth="50"
+                        Margin="5,5,5,5"
+                        VerticalAlignment="Center"
+                        x:Name="transactionInputAmountTextBox" />
+                    <TextBlock
+                        Text="Popis:"
+                        Margin="5,5,5,5"
+                        VerticalAlignment="Center" />
+                    <TextBox
+                        MinWidth="150"
+                        Margin="5,5,5,5"
+                        VerticalAlignment="Center"
+                        x:Name="transactionInputDescriptionTextBox" />
+                    <TextBlock
+                        Text="Kategorie:"
+                        Margin="5,5,5,5"
+                        VerticalAlignment="Center" />
+                    <local:CategoryPicker
+                        x:Name="transactionInputCategoryPicker" />
+                    <Button
+                        Content="Proveď"
+                        Margin="5,5,5,5"
+                        VerticalAlignment="Center"
+                        x:Name="transactionInputConfirmButton"
+                        Click="transactionInputConfirmButton_Click" />
+                </StackPanel>
+            </TabItem>
+            <TabItem
+                Header="Správa kategorií">
+                <StackPanel
+                    Orientation="Vertical">
+                    <GroupBox
+                        Header="Přidat">
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBox
+                                x:Name="addCategoryNameTextBox"
+                                Margin="5,5,5,5"
+                                MinWidth="100" />
+                            <TextBlock
+                                Margin="5,5,5,5"
+                                Text="Barva:"
+                                Grid.Column="1" />
+                            <xctk:ColorPicker
+                                x:Name="addCategoryColorPicker"
+                                Margin="5,5,5,5"
+                                DisplayColorAndName="False"
+                                MinWidth="100" />
+                            <Button
+                                Margin="5,5,5,5"
+                                Content="Proveď"
+                                x:Name="addCategoryButton"
+                                Click="addCategoryButton_Click" />
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox
+                        Header="Upravit">
+                        <StackPanel
+                            Orientation="Vertical">
+                            <StackPanel
+                                Orientation="Horizontal">
+                                <local:CategoryPicker
+                                    x:Name="editCategoryPicker" />
+                                <TextBox
+                                    x:Name="editCategoryNameTextBox"
+                                    Margin="5,5,5,5"
+                                    Grid.Column="0"
+                                    MinWidth="100"
+                                    VerticalContentAlignment="Center"
+                                    Text="{Binding SelectedCategory.Name, ElementName=editCategoryPicker, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding IsUnassignedSelected, ElementName=editCategoryPicker, Converter={StaticResource InverseBooleanConverter}}" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Text="Barva:"
+                                    Grid.Column="1" />
+                                <xctk:ColorPicker
+                                    x:Name="editCategoryColorPicker"
+                                    Margin="5,5,5,5"
+                                    DisplayColorAndName="False"
+                                    MinWidth="100"
+                                    SelectedColor="{Binding SelectedCategory.Color, ElementName=editCategoryPicker, Converter={StaticResource MyOxyColorConverter}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"
+                                    IsEnabled="{Binding IsUnassignedSelected, ElementName=editCategoryPicker, Converter={StaticResource InverseBooleanConverter}}" />
+                                <Button
+                                    Content="Odstranit"
+                                    x:Name="removeCategoryButton"
+                                    Click="removeCategoryButton_Click"
+                                    IsEnabled="{Binding IsUnassignedSelected, Converter={StaticResource InverseBooleanConverter}, ElementName=editCategoryPicker}"
+                                    Margin="5,5,5,5" />
+
+                            </StackPanel>
+                            <GroupBox
+                                Header="Automatické přiřazení">
+                                <StackPanel
+                                    Orientation="Vertical">
+                                    <ListView
+                                        x:Name="automationuleListView"
+                                        ItemsSource="{Binding ElementName=editCategoryPicker, Path=SelectedCategory.Rules}"
+                                        Margin="5,5,5,5"
+                                        SelectionMode="Single">
+                                        <ListView.View>
+                                            <GridView>
+                                                <GridViewColumn
+                                                    Header="Pole výpisu">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <ComboBox
+                                                                ItemsSource="{x:Static data:CategoryManager.fields}"
+                                                                SelectedItem="{Binding Field}">
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock
+                                                                            Text="{Binding Name}" />
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn
+                                                    Header="Přesná shoda">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <CheckBox 
+                                                                IsChecked="{Binding ExactMatch}"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                                <GridViewColumn
+                                                    Header="Hodnota">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox
+                                                                Text="{Binding Value}"
+                                                                MinWidth="100"/>
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
+                                            </GridView>
+                                        </ListView.View>
+                                    </ListView>
+                                    <StackPanel
+                                        Orientation="Horizontal">
+                                        <Button
+                                            x:Name="addAutomationRuleButton"
+                                            Content="Přidat"
+                                            Click="addAutomationRuleButton_Click"
+                                            Margin="5,5,5,5"
+                                            IsEnabled="{Binding IsUnassignedSelected, Converter={StaticResource InverseBooleanConverter}, ElementName=editCategoryPicker}" />
+                                        <Button
+                                            x:Name="removeAutomationRuleButton"
+                                            Content="Odstranit"
+                                            Click="removeAutomationRuleButton_Click"
+                                            Margin="5,5,5,5"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
     </Grid>
 </UserControl>

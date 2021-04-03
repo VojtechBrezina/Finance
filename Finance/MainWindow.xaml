@@ -5,15 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Finance"
         mc:Ignorable="d"
-        Title="Finance" Height="450" Width="800" WindowStartupLocation="CenterScreen" MinWidth="600" MinHeight="400">
+        Title="Finance" Height="700" Width="1200" WindowStartupLocation="CenterScreen" MinWidth="1200" MinHeight="700"
+        Closing="Window_Closing">
 
     <DockPanel>
         <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem Header="_Zadání dat" Click="DataInputScreenSelected"/>
-            <MenuItem Header="_Přehled dat"/>
+            <MenuItem x:Name="datInputMenuItem" Header="_Zadání dat" Click="datInputMenuItem_Click"/>
+            <MenuItem x:Name="overviewMenuItem" Header="_Přehled dat" Click="overviewMenuItem_Click"/>
             <MenuItem Header="Ú_vodní obrazovka"/>
             <MenuItem Header="_Nastavení úvodní obrazovky"/>
-            <MenuItem Header="_O programu"/>
+            <MenuItem x:Name="aboutMenuItem" Header="_O programu" Click="aboutMenuItem_Click"/>
             <MenuItem Header="_Ukončit" Command="Close"/>
         </Menu>
     </DockPanel>

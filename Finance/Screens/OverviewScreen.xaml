@@ -1,0 +1,271 @@
+﻿<UserControl
+    x:Class="Finance.Screens.OverviewScreen"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Finance"
+    xmlns:oxy="http://oxyplot.org/wpf"
+    xmlns:data="clr-namespace:Finance.Data"
+    mc:Ignorable="d"
+    d:DesignHeight="450"
+    d:DesignWidth="800">
+    <UserControl.Resources>
+        <oxy:OxyColorConverter
+            x:Key="OxyColorConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition
+                Height="1*" />
+            <RowDefinition
+                Height="auto" />
+        </Grid.RowDefinitions>
+        <TabControl
+            HorizontalAlignment="Stretch"
+            Grid.Row="0"
+            Margin="5,5,5,5">
+            <TabItem
+                Header="Přehled">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="1*" />
+                        <ColumnDefinition
+                            Width="1*" />
+                        <ColumnDefinition
+                            Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="1*" />
+                    </Grid.RowDefinitions>
+                    <GroupBox
+                        Header="Období">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="auto" />
+                                <RowDefinition
+                                    Height="auto" />
+                                <RowDefinition
+                                    Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="auto" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Text="Jednotka času:"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Center" />
+                            <ComboBox
+                                x:Name="unitTypeComboBox"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5,5,5,5"
+                                ItemsSource="{x:Static data:StatisticsManager.unitTypes}"
+                                SelectionChanged="unitTypeComboBox_SelectionChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding DisplayName}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="Od:"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Center" />
+                            <DatePicker
+                                x:Name="fromDatePicker"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5,5,5,5"
+                                SelectedDateChanged="fromDatePicker_SelectedDateChanged"/>
+                            <TextBlock
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Text="Do:"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Center" />
+                            <DatePicker
+                                x:Name="toDatePicker"
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Margin="5,5,5,5"
+                                SelectedDateChanged="toDatePicker_SelectedDateChanged"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox
+                        Header="Kategorie"
+                        Grid.Row="0"
+                        Grid.Column="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition 
+                                    Width="1*"/>
+                                <ColumnDefinition
+                                    Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition 
+                                    Height="auto"/>
+                                <RowDefinition
+                                    Height="auto" />
+                                <RowDefinition
+                                    Height="auto" />
+                            </Grid.RowDefinitions>
+                            <ListView
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="5,5,5,5"
+                                ItemsSource="{x:Static data:CategoryManager.Categories}"
+                                SelectionMode="Multiple"
+                                x:Name="categoryListView"
+                                SelectionChanged="categoryListView_SelectionChanged">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel
+                                            Orientation="Horizontal">
+                                            <Rectangle
+                                                Fill="{Binding Color, Converter={StaticResource OxyColorConverter}}"
+                                                Width="20"
+                                                Margin="0,0,5,0" />
+                                            <TextBlock
+                                                Text="{Binding Name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                            <CheckBox 
+                                Content="Celkem"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="5,5,5,5"
+                                x:Name="totalCheckBox"
+                                Checked="totalCheckBox_CheckedChanged" 
+                                Unchecked="totalCheckBox_CheckedChanged"/>
+                            <Button 
+                                Content="Všechno"
+                                Grid.Column="0"
+                                Grid.Row="2"
+                                Margin="5,5,5,5"
+                                x:Name="allCategoriesButton"
+                                Click="allCategoriesButton_Click"/>
+                            <Button
+                                Content="Nic"
+                                Grid.Column="1"
+                                Grid.Row="2"
+                                Margin="5,5,5,5"
+                                x:Name="noCategoriesButton"
+                                Click="noCategoriesButton_Click"/>
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox
+                        Header="Přizpůsobit"
+                        Grid.Row="0"
+                        Grid.Column="2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition
+                                    Height="auto" />
+                                <RowDefinition
+                                    Height="auto" />
+                                <RowDefinition
+                                    Height="auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition
+                                    Width="auto" />
+                                <ColumnDefinition
+                                    Width="1*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock 
+                                Text="Typ zobrazení:"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="5,5,5,5"
+                                VerticalAlignment="Center"/>
+                            <ComboBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Margin="5,5,5,5"
+                                x:Name="renderTypeComboBox"
+                                SelectionChanged="renderTypeComboBox_SelectionChanged">
+                                <ComboBoxItem 
+                                    Content="tabulka"
+                                    Tag="t"/>
+                                <ComboBoxItem
+                                    Content="graf" 
+                                    Tag="g"/>
+                                <ComboBoxItem
+                                    Content="graf vývoje (výchozí datum se bere jako nula)" 
+                                    Tag="G"/>
+                            </ComboBox>
+                            <CheckBox 
+                                Content="Zahrnout pravidelné"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="5,5,5,5"/>
+                            <CheckBox
+                                Content="Zahrnout průměr do předpovědi"
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Grid.ColumnSpan="2"
+                                Margin="5,5,5,5"/>
+                        </Grid>
+                    </GroupBox>
+                    <oxy:PlotView
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="5,5,5,5"
+                        x:Name="plotView"
+                        Visibility="Hidden">
+                    </oxy:PlotView>
+                    <ScrollViewer
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        HorizontalScrollBarVisibility="Auto"
+                        VerticalScrollBarVisibility="Auto"
+                        x:Name="tableViewScroller"
+                        Visibility="Hidden">
+                        <Grid
+                            Margin="5,5,5,5"
+                            x:Name="tableView"/>
+                    </ScrollViewer>
+                    <oxy:PlotView
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="3"
+                        Margin="5,5,5,5"
+                        x:Name="integratedPlotView"
+                        Visibility="Hidden">
+                    </oxy:PlotView>
+                </Grid>
+            </TabItem>
+            <TabItem
+                Header="Pravielné transakce">
+
+            </TabItem>
+        </TabControl>
+        <Button
+            Content="Vygenerovat HTML výpis..."
+            HorizontalAlignment="Center"
+            Width="150"
+            Grid.Row="1"
+            Margin="5,0,5,5" />
+    </Grid>
+</UserControl>
