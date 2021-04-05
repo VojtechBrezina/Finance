@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Finance.Data {
@@ -45,27 +42,32 @@ namespace Finance.Data {
 		public static readonly UnitType dayType = new UnitType("Den", "day",
 			(NodaTime.LocalDate date) => $"{date.ToString("dd-MM-yyyy", null)}.txt",
 			(NodaTime.LocalDate date) => date.ToString("d/ M/ yyyy", null),
+			(NodaTime.LocalDate date) => date,
 			NodaTime.Period.FromDays(1)
 		);
 		public static readonly UnitType weekType = new UnitType("Týden", "week",
 			(NodaTime.LocalDate date) => $"{NodaTime.Calendars.WeekYearRules.Iso.GetWeekOfWeekYear(date)}-{date.ToString("yyyy", null)}.txt",
 			(NodaTime.LocalDate date) => $"{NodaTime.Calendars.WeekYearRules.Iso.GetWeekOfWeekYear(date)}. týden r. {date.ToString("yyyy", null)}",
+			(NodaTime.LocalDate date) => date - NodaTime.Period.FromDays((int)date.DayOfWeek - 1),
 			NodaTime.Period.FromWeeks(1)
 		);
 		public static readonly UnitType monthType = new UnitType("Měsíc", "month",
 			(NodaTime.LocalDate date) => $"{date.ToString("MM-yyyy", null)}.txt",
 			(NodaTime.LocalDate date) => date.ToString("MMMM yyyy", null),
+			(NodaTime.LocalDate date) => date - NodaTime.Period.FromDays(date.Day - 1),
 			NodaTime.Period.FromMonths(1)
 		);
 		public static readonly UnitType yearType = new UnitType("Rok", "year",
 			(NodaTime.LocalDate date) => $"{date.ToString("yyyy", null)}.txt",
 			(NodaTime.LocalDate date) => date.ToString("yyyy", null),
+			(NodaTime.LocalDate date) => date - NodaTime.Period.FromDays(date.DayOfYear - 1),
 			NodaTime.Period.FromYears(1)
 		);
 		public static readonly UnitType allTimeType = new UnitType("Všechen čas", "",
 			(NodaTime.LocalDate date) => $"all-time.txt",
 			(NodaTime.LocalDate date) => "Celkem",
-			NodaTime.Period.FromYears(1000)
+			(NodaTime.LocalDate date) => NodaTime.LocalDate.MinIsoValue,
+			NodaTime.Period.Between(NodaTime.LocalDate.MinIsoValue, NodaTime.LocalDate.MaxIsoValue, NodaTime.PeriodUnits.Ticks)
 		);
 
 		public class UnitType {
@@ -73,12 +75,16 @@ namespace Finance.Data {
 			public string Path { get; private set; }
 			private Func<NodaTime.LocalDate, string> GetPath { get; init; }
 			private Func<NodaTime.LocalDate, string> GetName { get; init; }
+			public Func<NodaTime.LocalDate, NodaTime.LocalDate> GetBegining { get; init; }
 			public NodaTime.Period Period { get; init; }
-			public UnitType(string dn, string p, Func<NodaTime.LocalDate, string> gp, Func<NodaTime.LocalDate, string> gn, NodaTime.Period pe) {
+			public UnitType(string dn, string p, Func<NodaTime.LocalDate, string> gp, Func<NodaTime.LocalDate, string> gn,
+				Func<NodaTime.LocalDate, NodaTime.LocalDate> gb, NodaTime.Period pe
+			) {
 				DisplayName = dn;
 				Path = p + "/";
 				GetPath = gp;
 				GetName = gn;
+				GetBegining = gb;
 				Period = pe;
 				unitTypes.Add(this);
 			}
@@ -91,7 +97,7 @@ namespace Finance.Data {
 					cachedUnits[toRemove].Dispose();
 					cachedUnits.Remove(toRemove);
 				}
-				cachedUnits[path] = new StatisticUnit(this, path, GetName(date));
+				cachedUnits[path] = new StatisticUnit(this, path, GetName(date), date);
 				return cachedUnits[path];
 			}
 
@@ -101,7 +107,7 @@ namespace Finance.Data {
 			}
 		}
 
-		public class StatisticUnit: IDisposable {
+		public sealed class StatisticUnit: IDisposable {
 			private readonly Dictionary<int, decimal> categorySums = new Dictionary<int, decimal>();
 			public decimal Total { get; private set; }
 
@@ -110,6 +116,9 @@ namespace Finance.Data {
 			public decimal this[CategoryManager.Category c] => this[c.Id];
 
 			public int Count { get; private set; }
+
+			public NodaTime.LocalDate BeginingDate { get; init; }
+			public NodaTime.LocalDate EndDate { get => BeginingDate + Type.Period - NodaTime.Period.FromDays(1); }
 
 			public void Add(int c, decimal a) {
 				if(!categorySums.ContainsKey(c))
@@ -132,10 +141,11 @@ namespace Finance.Data {
 			private string FilePath { get; init; }
 			public string Name { get; init; }
 
-			public StatisticUnit(UnitType type, string path, string name) {
+			public StatisticUnit(UnitType type, string path, string name, NodaTime.LocalDate date) {
 				FilePath = type.Path + path;
 				Name = name;
 				Type = type;
+				BeginingDate = type.GetBegining(date);
 
 				if(File.Exists(FilePath)) {
 					using(var reader = new StreamReader(FilePath)) {
@@ -173,6 +183,16 @@ namespace Finance.Data {
 
 			public void Dispose() {
 				Save();
+			}
+
+			public override bool Equals(object obj) {
+				if(obj.GetType() != typeof(StatisticUnit))
+					return false;
+				return this == (StatisticUnit)obj;
+			}
+
+			public override int GetHashCode() {
+				return HashCode.Combine(FilePath);
 			}
 		}
 

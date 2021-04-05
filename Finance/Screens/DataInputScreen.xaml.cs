@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Collections.Generic;
 using Microsoft.Win32;
-using Xceed.Wpf.Toolkit;
 using Finance.Data;
 
 using Finance.Data.Import;

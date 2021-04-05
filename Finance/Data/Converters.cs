@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Finance.Data {
 	public class IdToCategoryConverter: IValueConverter {

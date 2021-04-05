@@ -17,7 +17,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition
-                Height="1*" />
+                Height="1*"/>
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -30,7 +30,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="1*" />
+                            Width="1*"/>
                         <ColumnDefinition
                             Width="1*" />
                         <ColumnDefinition
@@ -38,7 +38,8 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition
-                            Height="auto" />
+                            Height="auto"
+                            MaxHeight="200" />
                         <RowDefinition
                             Height="1*" />
                     </Grid.RowDefinitions>
@@ -223,7 +224,10 @@
                                 Grid.Row="2"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
-                                Margin="5,5,5,5"/>
+                                Margin="5,5,5,5"
+                                x:Name="includeAverageCheckBox"
+                                Checked="includeAverageCheckBox_CheckedChanged"
+                                Unchecked="includeAverageCheckBox_CheckedChanged"/>
                         </Grid>
                     </GroupBox>
                     <oxy:PlotView
@@ -232,7 +236,8 @@
                         Grid.ColumnSpan="3"
                         Margin="5,5,5,5"
                         x:Name="plotView"
-                        Visibility="Hidden">
+                        Visibility="Hidden"
+                        VerticalAlignment="Stretch">
                     </oxy:PlotView>
                     <ScrollViewer
                         Grid.Row="1"
@@ -241,7 +246,8 @@
                         HorizontalScrollBarVisibility="Auto"
                         VerticalScrollBarVisibility="Auto"
                         x:Name="tableViewScroller"
-                        Visibility="Hidden">
+                        Visibility="Hidden"
+                        VerticalAlignment="Stretch">
                         <Grid
                             Margin="5,5,5,5"
                             x:Name="tableView"/>
@@ -252,20 +258,35 @@
                         Grid.ColumnSpan="3"
                         Margin="5,5,5,5"
                         x:Name="integratedPlotView"
-                        Visibility="Hidden">
+                        Visibility="Hidden"
+                        VerticalAlignment="Stretch">
                     </oxy:PlotView>
                 </Grid>
             </TabItem>
             <TabItem
                 Header="Pravielné transakce">
-
+                
             </TabItem>
         </TabControl>
-        <Button
-            Content="Vygenerovat HTML výpis..."
-            HorizontalAlignment="Center"
-            Width="150"
+        <StackPanel
+            HorizontalAlignment="Stretch"
             Grid.Row="1"
-            Margin="5,0,5,5" />
+            Orientation="Vertical">
+            <Button
+                Content="Uložit jako HTML..."
+                HorizontalAlignment="Center"
+                Width="150"
+                Margin="5,0,5,5" 
+                x:Name="saveHTMLButton"
+                Click="saveHTMLButton_Click"/>
+            <Button
+                Content="Vytisknout..."
+                HorizontalAlignment="Center"
+                Width="150"
+                Margin="5,0,5,5" 
+                x:Name="printButton"
+                Click="printButton_Click"/>
+        </StackPanel>
+        
     </Grid>
 </UserControl>

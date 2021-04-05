@@ -1,22 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
-using Microsoft.Windows.Input;
 
 using Finance.Screens;
 using Finance.Data;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Finance {
 	/// <summary>
@@ -24,7 +12,6 @@ namespace Finance {
 	/// pro navigaci mezi jednotlivými obrazovkami
 	/// </summary>
 	public partial class MainWindow: Window {
-		public readonly TitleScreen titleScreen = new TitleScreen();
 		public readonly DataInputScreen dataInputScreen = new DataInputScreen();
 		public readonly OverviewScreen overviewScreen = new OverviewScreen();
 		public readonly AboutScreen aboutScreen = new AboutScreen();
@@ -33,8 +20,8 @@ namespace Finance {
 
 		public MainWindow() {
 			InitializeComponent();
-			((DockPanel)Content).Children.Add(titleScreen);
-			currentScreen = titleScreen;
+			((DockPanel)Content).Children.Add(overviewScreen);
+			currentScreen = overviewScreen;
 		}
 
 		private void SetScreen(UserControl screen) {
@@ -54,10 +41,12 @@ namespace Finance {
 
 		#endregion
 
+		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
 		private void datInputMenuItem_Click(object sender, RoutedEventArgs e) {
 			SetScreen(dataInputScreen);
 		}
 
+		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
 		private void aboutMenuItem_Click(object sender, RoutedEventArgs e) {
 			SetScreen(aboutScreen);
 		}
@@ -67,6 +56,7 @@ namespace Finance {
 			StatisticsManager.Save();
 		}
 
+		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
 		private void overviewMenuItem_Click(object sender, RoutedEventArgs e) {
 			SetScreen(overviewScreen);
 		}
