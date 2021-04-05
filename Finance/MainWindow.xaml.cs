@@ -54,6 +54,7 @@ namespace Finance {
 		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
 			CategoryManager.Save();
 			StatisticsManager.Save();
+			RegularTranactionManager.Save();
 		}
 
 		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]

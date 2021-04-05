@@ -1,32 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Finance.Data {
 	public static class RegularTranactionManager {
+		private static readonly string filePath;
+		public static ObservableCollection<RegularTransaction> Transactions { get; private set; } = new ObservableCollection<RegularTransaction>();
+
 		public class RegularTransaction {
 			public int CategoryID { get; set; }
 			public CategoryManager.Category Category { get => CategoryManager.Get(CategoryID); }
 			public decimal Amount { get; set; }
 			public NodaTime.LocalDate StartDate { get; set; }
 			public bool IncludeInThePast { get; set; }
-			public RepeatMode RepeatMode { get; set; }
-		}
-
-		public enum RepeatPeriod{
-			Day = NodaTime.PeriodUnits.Days,
-			Week = NodaTime.PeriodUnits.Weeks,
-			Month = NodaTime.PeriodUnits.Months,
-			Year = NodaTime.PeriodUnits.Years,
-		}
-
-		public class RepeatMode {
 			public readonly RepeatPeriod period;
 			public readonly List<int> days;
 
-			public RepeatMode(RepeatPeriod p, string d) {
+			public RegularTransaction(RepeatPeriod p, string d) {
 				period = p;
 				var _d = d.Split(',');
 				foreach(var ds in _d) {
@@ -50,15 +44,15 @@ namespace Finance.Data {
 				NodaTime.LocalDate cleanDate = begining + (nodaPeriod - NodaTime.Period.FromDays(nodaPeriod.Days));
 				int intervalLength = 0;
 				switch(period) {
-					case RepeatPeriod.Week: 
+					case RepeatPeriod.Week:
 						endOffset = (int)cleanDate.DayOfWeek;
 						intervalLength = 7;
 						break;
-					case RepeatPeriod.Month: 
+					case RepeatPeriod.Month:
 						endOffset = cleanDate.Day;
 						intervalLength = (begining - NodaTime.Period.FromDays(begining.Day) + NodaTime.Period.FromMonths(1) - NodaTime.Period.FromDays(1)).Day;
 						break;
-					case RepeatPeriod.Year: 
+					case RepeatPeriod.Year:
 						endOffset = cleanDate.DayOfYear;
 						intervalLength = (begining - NodaTime.Period.FromDays(begining.DayOfYear) + NodaTime.Period.FromYears(1) - NodaTime.Period.FromDays(1)).DayOfYear;
 						break;
@@ -66,11 +60,34 @@ namespace Finance.Data {
 				foreach(var d in days) {
 					if(
 						(d > endOffset && d <= endOffset + nodaPeriod.Days) ||
-						(d > (endOffset % intervalLength) && d <= ((endOffset + nodaPeriod.Days) % intervalLength) )
+						(d > (endOffset % intervalLength) && d <= ((endOffset + nodaPeriod.Days) % intervalLength))
 					)
 						count++;
 				}
 				return count;
+			}
+		}
+
+		public enum RepeatPeriod{
+			Day = NodaTime.PeriodUnits.Days,
+			Week = NodaTime.PeriodUnits.Weeks,
+			Month = NodaTime.PeriodUnits.Months,
+			Year = NodaTime.PeriodUnits.Years,
+		}
+
+		static RegularTranactionManager() {
+			filePath = PathManager.Get() + "regular-transactions.txt";
+
+		}
+
+		public static void Save() {
+			foreach(var rt in Transactions) {
+				using(var writer = new StreamWriter(filePath)) {
+					writer.WriteLine(rt.CategoryID);
+					writer.WriteLine(rt.Amount);
+					writer.WriteLine(rt.StartDate.ToString("d", null));
+					writer.WriteLine(rt.IncludeInThePast);
+				}
 			}
 		}
 	}
