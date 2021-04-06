@@ -67,7 +67,7 @@ namespace Finance.Data {
 			(NodaTime.LocalDate date) => $"all-time.txt",
 			(NodaTime.LocalDate date) => "Celkem",
 			(NodaTime.LocalDate date) => NodaTime.LocalDate.MinIsoValue,
-			NodaTime.Period.Between(NodaTime.LocalDate.MinIsoValue, NodaTime.LocalDate.MaxIsoValue, NodaTime.PeriodUnits.Ticks)
+			NodaTime.Period.Between(NodaTime.LocalDate.MinIsoValue, NodaTime.LocalDate.MaxIsoValue, NodaTime.PeriodUnits.Days)
 		);
 
 		public class UnitType {

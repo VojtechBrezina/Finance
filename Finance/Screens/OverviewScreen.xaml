@@ -265,7 +265,35 @@
             </TabItem>
             <TabItem
                 Header="Pravielné transakce">
-                
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition 
+                            Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition 
+                            Width="auto"/>
+                        <ColumnDefinition
+                            Width="auto" />
+                        <ColumnDefinition
+                            Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <local:CategoryPicker
+                        Grid.Row="0"
+                        Grid.Column="0" />
+                    <TextBlock 
+                        Text="Částka:"
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="5"/>
+                    <TextBox 
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Center"
+                        MinWidth="100"/>
+                </Grid>
             </TabItem>
         </TabControl>
         <StackPanel

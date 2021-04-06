@@ -60,7 +60,7 @@ namespace Finance.Data {
 				foreach(var d in days) {
 					if(
 						(d > endOffset && d <= endOffset + nodaPeriod.Days) ||
-						(d > (endOffset % intervalLength) && d <= ((endOffset + nodaPeriod.Days) % intervalLength))
+						(d > (endOffset - intervalLength) && d <= (endOffset + nodaPeriod.Days - intervalLength))
 					)
 						count++;
 				}
@@ -77,7 +77,24 @@ namespace Finance.Data {
 
 		static RegularTranactionManager() {
 			filePath = PathManager.Get() + "regular-transactions.txt";
-
+			if(File.Exists(filePath)) {
+				using(var reader = new StreamReader(filePath)) {
+					while(!reader.EndOfStream) {
+						var categoryId = int.Parse(reader.ReadLine());
+						var amount = decimal.Parse(reader.ReadLine());
+						var startDate = NodaTime.Text.LocalDatePattern.FullRoundtrip.Parse(reader.ReadLine()).Value;
+						var includeInThePast = bool.Parse(reader.ReadLine());
+						var p = (RepeatPeriod)int.Parse(reader.ReadLine());
+						var d = reader.ReadLine();
+						Transactions.Add(new RegularTransaction(p, d) {
+							CategoryID = categoryId,
+							Amount = amount,
+							StartDate = startDate,
+							IncludeInThePast = includeInThePast,
+						});
+					}
+				}
+			}
 		}
 
 		public static void Save() {
@@ -85,8 +102,10 @@ namespace Finance.Data {
 				using(var writer = new StreamWriter(filePath)) {
 					writer.WriteLine(rt.CategoryID);
 					writer.WriteLine(rt.Amount);
-					writer.WriteLine(rt.StartDate.ToString("d", null));
+					writer.WriteLine(rt.StartDate.ToString("r", null));
 					writer.WriteLine(rt.IncludeInThePast);
+					writer.WriteLine((int)rt.period);
+					writer.WriteLine(string.Join(',', rt.days));
 				}
 			}
 		}

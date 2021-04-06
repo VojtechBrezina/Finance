@@ -56,7 +56,7 @@ namespace Finance.Data {
 
 		private void Load() {
 			using(StreamReader reader = new StreamReader(FilePath)) {
-				var pattern = NodaTime.Text.LocalDatePattern.Create("d", CultureInfo.InvariantCulture);
+				var pattern = NodaTime.Text.LocalDatePattern.FullRoundtrip;
 				while(!reader.EndOfStream) {
 					Transaction t = new Transaction {
 						Date = pattern.Parse(reader.ReadLine()).Value,
@@ -74,7 +74,7 @@ namespace Finance.Data {
 		public void Save() {
 			StreamWriter writer = new StreamWriter(FilePath);
 			foreach(var t in transactions) {
-				writer.WriteLine(t.Date.ToString("d", CultureInfo.InvariantCulture));
+				writer.WriteLine(t.Date.ToString("r", CultureInfo.InvariantCulture));
 				writer.WriteLine(t.Amount.ToString());
 				writer.WriteLine(t.Description);
 				writer.WriteLine(t.CategoryId.ToString());
