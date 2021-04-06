@@ -111,7 +111,7 @@ namespace Finance.Screens {
 			}
 		}
 
-		private void Render() {
+		public void Render() {
 			if(renderTypeComboBox.SelectedItem == null)
 				return;
 			

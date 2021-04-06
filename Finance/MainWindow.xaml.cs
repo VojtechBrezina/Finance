@@ -60,6 +60,7 @@ namespace Finance {
 		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
 		private void overviewMenuItem_Click(object sender, RoutedEventArgs e) {
 			SetScreen(overviewScreen);
+			overviewScreen.Render();
 		}
 	}
 }

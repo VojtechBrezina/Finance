@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="5,5,5,5">
-        <RichTextBox IsReadOnly="False">
+        <RichTextBox IsReadOnly="True">
             <FlowDocument>
                 <Paragraph FontSize="50" Margin="5,5,5,5">O programu</Paragraph>
                 <Paragraph FontSize="20">

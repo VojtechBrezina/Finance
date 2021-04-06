@@ -154,7 +154,9 @@ namespace Finance.Data {
 						while(!reader.EndOfStream) {
 							int c = int.Parse(reader.ReadLine());
 							c = CategoryManager.Get(c).Id;
-							categorySums[c] = decimal.Parse(reader.ReadLine());
+							if(!categorySums.ContainsKey(c))
+								categorySums[c] = 0;
+							categorySums[c] += decimal.Parse(reader.ReadLine());
 						}
 					}
 				} else {
