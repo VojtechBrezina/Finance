@@ -81,10 +81,10 @@ namespace Finance.Screens {
 			decimal averageTotal = 0;
 			int countSoFar = 0;
 			foreach(var u in unitInterval) {
-				decimal total = future ? averageTotal - u.Total : u.Total;
+				decimal total = future ? averageTotal + u.Total : u.Total;
 				var values = new Dictionary<CategoryManager.Category, double>();
 				foreach(CategoryManager.Category c in categoryListView.SelectedItems) {
-					values[c] = future ? (averageValues[c] - (double)u[c]) : (double)u[c] ;
+					values[c] = future ? (averageValues[c] + (double)u[c]) : (double)u[c] ;
 					integratedValues[c] += values[c]; 
 				}
 				integratedTotal += total;
@@ -97,15 +97,17 @@ namespace Finance.Screens {
 					Empty = u.Count == 0,
 					Label = u.Name,
 				};
-				
-				if(u == nowUnit && countSoFar != 0) {
+
+				if(!future) {
+					countSoFar++;
+				}
+				if(u == nowUnit)
 					future = true;
+				if(u == nowUnit && countSoFar != 0) {
 					averageTotal = integratedTotal / countSoFar;
 					foreach(CategoryManager.Category c in categoryListView.SelectedItems)
 						averageValues[c] = integratedValues[c] / countSoFar;
-				} else {
-					countSoFar++;
-				}	
+				}
 			}
 		}
 
@@ -168,13 +170,13 @@ namespace Finance.Screens {
 				};
 				model.Series.Add(totalSeries);
 			}
-				bool future = false;
+			bool future = false;
 			foreach(var oi in EnumerateOverviewItems()) {
 				if(!future && oi.Future) {
 					model.Annotations.Add(new OxyPlot.Annotations.LineAnnotation() {
 						Color = OxyPlot.OxyColors.DarkRed,
 						Type = OxyPlot.Annotations.LineAnnotationType.Vertical,
-						X = axisX.Labels.Count + 0.5,
+						X = axisX.Labels.Count - 0.5,
 						StrokeThickness = 2,
 						Text = "hranice současnosti",
 					});
@@ -242,7 +244,7 @@ namespace Finance.Screens {
 					model.Annotations.Add(new OxyPlot.Annotations.LineAnnotation() {
 						Color = OxyPlot.OxyColors.DarkRed,
 						Type = OxyPlot.Annotations.LineAnnotationType.Vertical,
-						X = axisX.Labels.Count + 0.5,
+						X = axisX.Labels.Count - 0.5,
 						StrokeThickness = 2,
 						Text = "hranice současnosti",
 					});
