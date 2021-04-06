@@ -108,7 +108,8 @@
                     <GroupBox
                         Header="Kategorie"
                         Grid.Row="0"
-                        Grid.Column="1">
+                        Grid.Column="1"
+                        MaxHeight="200">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition 
@@ -117,8 +118,8 @@
                                     Width="1*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition 
-                                    Height="auto"/>
+                                <RowDefinition
+                                    Height="1*" />
                                 <RowDefinition
                                     Height="auto" />
                                 <RowDefinition
@@ -132,7 +133,8 @@
                                 ItemsSource="{x:Static data:CategoryManager.Categories}"
                                 SelectionMode="Multiple"
                                 x:Name="categoryListView"
-                                SelectionChanged="categoryListView_SelectionChanged">
+                                SelectionChanged="categoryListView_SelectionChanged"
+                                ScrollViewer.VerticalScrollBarVisibility="auto">
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel
@@ -265,34 +267,101 @@
             </TabItem>
             <TabItem
                 Header="Pravielné transakce">
-                <Grid HorizontalAlignment="Stretch">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition
+                            Width="1*" />
+                        <ColumnDefinition
+                            Width="1*" />
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition 
-                            Height="auto"/>
+                            Height="1*"/>
+                        <RowDefinition
+                            Height="auto" />
+                        <RowDefinition
+                            Height="auto" />
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition 
-                            Width="auto"/>
-                        <ColumnDefinition
-                            Width="auto" />
-                        <ColumnDefinition
-                            Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <local:CategoryPicker
-                        Grid.Row="0"
-                        Grid.Column="0" />
-                    <TextBlock 
-                        Text="Částka:"
-                        Grid.Row="0"
+                    <ListView
+                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                        Margin="5">
+                        
+                    </ListView>
+                    <WrapPanel
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Margin="5">
+                        <local:CategoryPicker />
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Text="Částka:"
+                                VerticalAlignment="Center"
+                                Margin="5" />
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                MinWidth="100" />
+                        </StackPanel>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Text="Začátek:"
+                                VerticalAlignment="Center"
+                                Margin="5" />
+                            <DatePicker
+                                VerticalAlignment="Center" />
+                        </StackPanel>
+                        <CheckBox
+                            Content="Zahrnout v minulosti"
+                            VerticalAlignment="Center"
+                            Margin="5" />
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Text="Opakovat jednou za:"
+                                VerticalAlignment="Center"
+                                Margin="5" />
+                            <ComboBox
+                                VerticalAlignment="Center"
+                                MinWidth="50">
+                                <ComboBoxItem
+                                    Content="Den"
+                                    Tag="8" />
+                                <ComboBoxItem
+                                    Content="Týden"
+                                    Tag="4" />
+                                <ComboBoxItem
+                                    Content="Měsíc"
+                                    Tag="2" />
+                                <ComboBoxItem
+                                    Content="Rok"
+                                    Tag="1" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Text="Dny opakování oddělené čárkou:"
+                                VerticalAlignment="Center"
+                                Margin="5" />
+                            <TextBox
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Center"
+                                MinWidth="100" />
+                        </StackPanel>
+                    </WrapPanel>
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Margin="5"
+                        Content="Přidat" />
+                    <Button
+                        Grid.Row="1"
                         Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Margin="5"/>
-                    <TextBox 
-                        Grid.Row="0"
-                        Grid.Column="2"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Center"
-                        MinWidth="100"/>
+                        Margin="5"
+                        Content="Odstranit" />
                 </Grid>
             </TabItem>
         </TabControl>
