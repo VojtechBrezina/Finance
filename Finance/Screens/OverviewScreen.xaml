@@ -13,11 +13,15 @@
     <UserControl.Resources>
         <oxy:OxyColorConverter
             x:Key="OxyColorConverter" />
+        <data:NodaTimeLocalDateConverter
+            x:Key="NodaTimeLocalDateConverter" />
+        <data:RepeatPeriodConverter
+            x:Key="RepeatPeriodConverter"/>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition
-                Height="1*"/>
+                Height="1*" />
             <RowDefinition
                 Height="auto" />
         </Grid.RowDefinitions>
@@ -30,7 +34,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition
-                            Width="1*"/>
+                            Width="1*" />
                         <ColumnDefinition
                             Width="1*" />
                         <ColumnDefinition
@@ -42,6 +46,8 @@
                             MaxHeight="200" />
                         <RowDefinition
                             Height="1*" />
+                        <RowDefinition 
+                            Height="auto"/>
                     </Grid.RowDefinitions>
                     <GroupBox
                         Header="Období">
@@ -64,7 +70,7 @@
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Text="Jednotka času:"
-                                Margin="5,5,5,5"
+                                Margin="5"
                                 VerticalAlignment="Center" />
                             <ComboBox
                                 x:Name="unitTypeComboBox"
@@ -75,7 +81,8 @@
                                 SelectionChanged="unitTypeComboBox_SelectionChanged">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding DisplayName}"/>
+                                        <TextBlock
+                                            Text="{Binding DisplayName}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -90,7 +97,7 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Margin="5,5,5,5"
-                                SelectedDateChanged="fromDatePicker_SelectedDateChanged"/>
+                                SelectedDateChanged="fromDatePicker_SelectedDateChanged" />
                             <TextBlock
                                 Grid.Row="2"
                                 Grid.Column="0"
@@ -102,7 +109,7 @@
                                 Grid.Row="2"
                                 Grid.Column="1"
                                 Margin="5,5,5,5"
-                                SelectedDateChanged="toDatePicker_SelectedDateChanged"/>
+                                SelectedDateChanged="toDatePicker_SelectedDateChanged" />
                         </Grid>
                     </GroupBox>
                     <GroupBox
@@ -112,8 +119,8 @@
                         MaxHeight="200">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition 
-                                    Width="1*"/>
+                                <ColumnDefinition
+                                    Width="1*" />
                                 <ColumnDefinition
                                     Width="1*" />
                             </Grid.ColumnDefinitions>
@@ -149,29 +156,29 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <CheckBox 
+                            <CheckBox
                                 Content="Celkem"
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
                                 Margin="5,5,5,5"
                                 x:Name="totalCheckBox"
-                                Checked="totalCheckBox_CheckedChanged" 
-                                Unchecked="totalCheckBox_CheckedChanged"/>
-                            <Button 
+                                Checked="totalCheckBox_CheckedChanged"
+                                Unchecked="totalCheckBox_CheckedChanged" />
+                            <Button
                                 Content="Všechno"
                                 Grid.Column="0"
                                 Grid.Row="2"
                                 Margin="5,5,5,5"
                                 x:Name="allCategoriesButton"
-                                Click="allCategoriesButton_Click"/>
+                                Click="allCategoriesButton_Click" />
                             <Button
                                 Content="Nic"
                                 Grid.Column="1"
                                 Grid.Row="2"
                                 Margin="5,5,5,5"
                                 x:Name="noCategoriesButton"
-                                Click="noCategoriesButton_Click"/>
+                                Click="noCategoriesButton_Click" />
                         </Grid>
                     </GroupBox>
                     <GroupBox
@@ -193,34 +200,37 @@
                                 <ColumnDefinition
                                     Width="1*" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock 
+                            <TextBlock
                                 Text="Typ zobrazení:"
                                 Grid.Row="0"
                                 Grid.Column="0"
                                 Margin="5,5,5,5"
-                                VerticalAlignment="Center"/>
+                                VerticalAlignment="Center" />
                             <ComboBox
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Margin="5,5,5,5"
                                 x:Name="renderTypeComboBox"
                                 SelectionChanged="renderTypeComboBox_SelectionChanged">
-                                <ComboBoxItem 
+                                <ComboBoxItem
                                     Content="tabulka"
-                                    Tag="t"/>
+                                    Tag="t" />
                                 <ComboBoxItem
-                                    Content="graf" 
-                                    Tag="g"/>
+                                    Content="graf"
+                                    Tag="g" />
                                 <ComboBoxItem
-                                    Content="graf vývoje (výchozí datum se bere jako nula)" 
-                                    Tag="G"/>
+                                    Content="graf vývoje (výchozí datum se bere jako nula)"
+                                    Tag="G" />
                             </ComboBox>
-                            <CheckBox 
+                            <CheckBox
                                 Content="Zahrnout pravidelné"
                                 Grid.Row="1"
                                 Grid.Column="0"
                                 Grid.ColumnSpan="2"
-                                Margin="5,5,5,5"/>
+                                Margin="5,5,5,5"
+                                x:Name="includeRegularCheckBox"
+                                Checked="includeRegularCheckBox_CheckedChanged"
+                                Unchecked="includeRegularCheckBox_CheckedChanged" />
                             <CheckBox
                                 Content="Zahrnout průměr do předpovědi"
                                 Grid.Row="2"
@@ -229,7 +239,7 @@
                                 Margin="5,5,5,5"
                                 x:Name="includeAverageCheckBox"
                                 Checked="includeAverageCheckBox_CheckedChanged"
-                                Unchecked="includeAverageCheckBox_CheckedChanged"/>
+                                Unchecked="includeAverageCheckBox_CheckedChanged" />
                         </Grid>
                     </GroupBox>
                     <oxy:PlotView
@@ -252,7 +262,7 @@
                         VerticalAlignment="Stretch">
                         <Grid
                             Margin="5,5,5,5"
-                            x:Name="tableView"/>
+                            x:Name="tableView" />
                     </ScrollViewer>
                     <oxy:PlotView
                         Grid.Row="1"
@@ -263,6 +273,26 @@
                         Visibility="Hidden"
                         VerticalAlignment="Stretch">
                     </oxy:PlotView>
+                    <StackPanel
+                        HorizontalAlignment="Stretch"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3"
+                        Orientation="Vertical">
+                        <Button
+                            Content="Uložit jako HTML..."
+                            HorizontalAlignment="Center"
+                            Width="150"
+                            Margin="5,0,5,5"
+                            x:Name="saveHTMLButton"
+                            Click="saveHTMLButton_Click" />
+                        <Button
+                            Content="Vytisknout..."
+                            HorizontalAlignment="Center"
+                            Width="150"
+                            Margin="5,0,5,5"
+                            x:Name="printButton"
+                            Click="printButton_Click" />
+                    </StackPanel>
                 </Grid>
             </TabItem>
             <TabItem
@@ -275,8 +305,8 @@
                             Width="1*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition 
-                            Height="1*"/>
+                        <RowDefinition
+                            Height="1*" />
                         <RowDefinition
                             Height="auto" />
                         <RowDefinition
@@ -284,106 +314,104 @@
                     </Grid.RowDefinitions>
                     <ListView
                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                        Margin="5">
-                        
-                    </ListView>
-                    <WrapPanel
-                        Grid.Row="2"
+                        Margin="5"
                         Grid.Column="0"
+                        Grid.Row="0"
                         Grid.ColumnSpan="2"
-                        Margin="5">
-                        <local:CategoryPicker />
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <TextBlock
-                                Text="Částka:"
-                                VerticalAlignment="Center"
-                                Margin="5" />
-                            <TextBox
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Center"
-                                MinWidth="100" />
-                        </StackPanel>
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <TextBlock
-                                Text="Začátek:"
-                                VerticalAlignment="Center"
-                                Margin="5" />
-                            <DatePicker
-                                VerticalAlignment="Center" />
-                        </StackPanel>
-                        <CheckBox
-                            Content="Zahrnout v minulosti"
-                            VerticalAlignment="Center"
-                            Margin="5" />
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <TextBlock
-                                Text="Opakovat jednou za:"
-                                VerticalAlignment="Center"
-                                Margin="5" />
-                            <ComboBox
-                                VerticalAlignment="Center"
-                                MinWidth="50">
-                                <ComboBoxItem
-                                    Content="Den"
-                                    Tag="8" />
-                                <ComboBoxItem
-                                    Content="Týden"
-                                    Tag="4" />
-                                <ComboBoxItem
-                                    Content="Měsíc"
-                                    Tag="2" />
-                                <ComboBoxItem
-                                    Content="Rok"
-                                    Tag="1" />
-                            </ComboBox>
-                        </StackPanel>
-                        <StackPanel
-                            Orientation="Horizontal">
-                            <TextBlock
-                                Text="Dny opakování oddělené čárkou:"
-                                VerticalAlignment="Center"
-                                Margin="5" />
-                            <TextBox
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Center"
-                                MinWidth="100" />
-                        </StackPanel>
-                    </WrapPanel>
+                        ItemsSource="{x:Static data:RegularTranactionManager.Transactions}"
+                        x:Name="regularTransactionsListView">
+                        <ListView.ItemContainerStyle>
+                            <Style
+                                TargetType="ListViewItem">
+                                <Setter
+                                    Property="HorizontalContentAlignment"
+                                    Value="Stretch" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn
+                                    Header="Kategorie">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <local:CategoryPicker
+                                                SelectedCategory="{Binding Category, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Částka">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Center"
+                                                MinWidth="100"
+                                                Text="{Binding Amount, Mode=TwoWay, StringFormat=C, FallbackValue=0.00, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Začátek">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <DatePicker
+                                                VerticalAlignment="Center"
+                                                SelectedDate="{Binding StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource NodaTimeLocalDateConverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Zahrnout v minulosti">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox
+                                                IsChecked="{Binding IncludeInThePast, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                HorizontalAlignment="Center" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Perioda opakování">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox
+                                                VerticalAlignment="Center"
+                                                MinWidth="50"
+                                                ItemsSource="{x:Static data:RepeatPeriodConverter.Names}"
+                                                SelectedItem="{Binding Period, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource RepeatPeriodConverter}}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn
+                                    Header="Dny opakování oddělené čárkou">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox
+                                                Text="{Binding SerializedDays, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                     <Button
                         Grid.Row="1"
                         Grid.Column="0"
                         Margin="5"
-                        Content="Přidat" />
+                        Content="Přidat"
+                        x:Name="addRegularTransactionButton"
+                        Click="addRegularTransactionButton_Click" />
                     <Button
                         Grid.Row="1"
                         Grid.Column="1"
                         Margin="5"
-                        Content="Odstranit" />
+                        Content="Odstranit"
+                        x:Name="removeRegularTransactionButton"
+                        Click="removeRegularTransactionButton_Click" />
                 </Grid>
             </TabItem>
         </TabControl>
-        <StackPanel
-            HorizontalAlignment="Stretch"
-            Grid.Row="1"
-            Orientation="Vertical">
-            <Button
-                Content="Uložit jako HTML..."
-                HorizontalAlignment="Center"
-                Width="150"
-                Margin="5,0,5,5" 
-                x:Name="saveHTMLButton"
-                Click="saveHTMLButton_Click"/>
-            <Button
-                Content="Vytisknout..."
-                HorizontalAlignment="Center"
-                Width="150"
-                Margin="5,0,5,5" 
-                x:Name="printButton"
-                Click="printButton_Click"/>
-        </StackPanel>
-        
+
     </Grid>
 </UserControl>

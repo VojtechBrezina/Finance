@@ -74,27 +74,50 @@ namespace Finance.Screens {
 			var nowUnit = ((StatisticsManager.UnitType)unitTypeComboBox.SelectedItem).GetUnit(NodaTime.LocalDate.FromDateTime(DateTime.Now));
 			var integratedValues = new Dictionary<CategoryManager.Category, double>();
 			var averageValues = new Dictionary<CategoryManager.Category, double>();
-			foreach(CategoryManager.Category c in categoryListView.SelectedItems) 
+			foreach(CategoryManager.Category c in categoryListView.SelectedItems) {
 				integratedValues[c] = 0;
+				averageValues[c] = 0;
+			}
 			bool future = false;
 			decimal integratedTotal = 0;
 			decimal averageTotal = 0;
 			int countSoFar = 0;
 			foreach(var u in unitInterval) {
+				bool notEmpty = false;
 				decimal total = future ? averageTotal + u.Total : u.Total;
 				var values = new Dictionary<CategoryManager.Category, double>();
 				foreach(CategoryManager.Category c in categoryListView.SelectedItems) {
-					values[c] = future ? (averageValues[c] + (double)u[c]) : (double)u[c] ;
+					if(!values.ContainsKey(c))
+						values[c] = 0;
+					values[c] += future ? (averageValues[c] + (double)u[c]) : (double)u[c] ;
 					integratedValues[c] += values[c]; 
 				}
+
 				integratedTotal += total;
+
+				if(u == nowUnit && countSoFar != 0) {
+					averageTotal = integratedTotal / countSoFar;
+					foreach(CategoryManager.Category c in categoryListView.SelectedItems)
+						averageValues[c] = integratedValues[c] / countSoFar;
+				}
+
+				if(includeRegularCheckBox.IsChecked.Value) {
+					foreach(var rt in RegularTranactionManager.Transactions) {
+						decimal toAdd = rt.GetCountIn(u, rt.IncludeInThePast ? rt.StartDate : NodaTime.LocalDate.Max(NodaTime.LocalDate.FromDateTime(DateTime.Now), rt.StartDate)) * rt.Amount;
+						if(!values.ContainsKey(rt.Category))
+							values[rt.Category] = 0;
+						values[rt.Category] += (double)toAdd;
+						total += toAdd;
+						notEmpty = notEmpty || toAdd != 0;
+					}
+				}
 				yield return new OverviewItem {
 					Total = (double)total,
 					IntegratedTotal = (double)integratedTotal,
 					Values = values,
 					IntegratedValues = integratedValues,
 					Future = future,
-					Empty = u.Count == 0,
+					Empty = u.Count == 0 && !notEmpty,
 					Label = u.Name,
 				};
 
@@ -103,11 +126,6 @@ namespace Finance.Screens {
 				}
 				if(u == nowUnit)
 					future = true;
-				if(u == nowUnit && countSoFar != 0) {
-					averageTotal = integratedTotal / countSoFar;
-					foreach(CategoryManager.Category c in categoryListView.SelectedItems)
-						averageValues[c] = integratedValues[c] / countSoFar;
-				}
 			}
 		}
 
@@ -278,8 +296,6 @@ namespace Finance.Screens {
 			y = 0;
 			int firstChunk = 2;
 			foreach(OverviewItem oi in EnumerateOverviewItems()) {
-				Debug.WriteLine($"{x} {y}");
-
 				if(x == 0) {
 					if(firstChunk == 1)
 						firstChunk = 0;
@@ -535,6 +551,21 @@ namespace Finance.Screens {
 
 		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
 		private void includeAverageCheckBox_CheckedChanged(object sender, RoutedEventArgs e) {
+			Render();
+		}
+
+		private void addRegularTransactionButton_Click(object sender, RoutedEventArgs e) {
+			RegularTranactionManager.Transactions.Add(new RegularTranactionManager.RegularTransaction(RegularTranactionManager.RepeatPeriod.Month, "1") {
+				StartDate = NodaTime.LocalDate.FromDateTime(DateTime.Now),
+				CategoryID = -1
+			});
+		}
+
+		private void removeRegularTransactionButton_Click(object sender, RoutedEventArgs e) {
+			RegularTranactionManager.Transactions.Remove((RegularTranactionManager.RegularTransaction)regularTransactionsListView.SelectedItem);
+		}
+
+		private void includeRegularCheckBox_CheckedChanged(object sender, RoutedEventArgs e) {
 			Render();
 		}
 	}

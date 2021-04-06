@@ -241,7 +241,7 @@
                             Orientation="Horizontal">
                             <TextBox
                                 x:Name="addCategoryNameTextBox"
-                                Margin="5,5,5,5"
+                                Margin="5"
                                 MinWidth="100" />
                             <TextBlock
                                 Margin="5,5,5,5"

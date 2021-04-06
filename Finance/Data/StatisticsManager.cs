@@ -226,6 +226,8 @@ namespace Finance.Data {
 			foreach(var v in cachedUnits) {
 				v.Value.Save();
 			}
+			cachedUnits.Clear();
+			cacheQueue.Clear();
 		}
 	}
 }

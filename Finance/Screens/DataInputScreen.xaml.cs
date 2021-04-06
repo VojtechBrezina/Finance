@@ -108,8 +108,11 @@ namespace Finance.Screens {
 
 		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
 		private void removeCategoryButton_Click(object sender, RoutedEventArgs e) {
-			if(editCategoryPicker.SelectedCategory != null)
+			if(editCategoryPicker.SelectedCategory != null && !editCategoryPicker.IsUnassignedSelected) {
+
 				CategoryManager.Remove(editCategoryPicker.SelectedCategory);
+				StatisticsManager.Save();
+			}
 		}
 
 		[SuppressMessage("Microsoft.Design", "IDE1006", Justification = "Event handler")]
